@@ -23,34 +23,39 @@ public class BaseTest {
     public AndroidDriver driver;
     public AppiumDriverLocalService service;
 
-    @AfterClass
-    public void after() {
-        driver.quit(); //Finaliza el driver
-        service.stop(); //Finaliza la conexión con Appium Server
-    }
-
     @BeforeClass
     public void newDriver() throws MalformedURLException {
 
         //Iniciar Appuim Server automáticamente
-        service=new AppiumServiceBuilder().withAppiumJS(new File("C:\\Users\\brian\\AppData\\Roaming\\npm\\node_modules\\appium\\build\\lib\\main.js"))
-               .withIPAddress("127.0.0.1").usingPort(4724).withTimeout(Duration.ofSeconds(300)).build();
-        service.start();
+        service=new AppiumServiceBuilder().withAppiumJS(new File("C:\\Users\\brian\\AppData\\Roaming\\npm\\node_modules\\appium\\build\\lib\\main.js")).withIPAddress("127.0.0.1")
+                .usingPort(4724)
+                .withTimeout(Duration.ofSeconds(300))
+                .build();
+        //service.start();
 
         //Crear capabilities
         UiAutomator2Options options=new UiAutomator2Options();
-        options.setDeviceName("Nexus5");
-        options.setApp("D:\\brian\\Estudio\\Test Automation\\MobileAuomation\\src\\test\\resources\\Android-NativeDemoApp-0.4.0.apk");
-        options.setAppPackage("com.wdiodemoapp");
-        options.setAppActivity(".SplashActivity");
-        options.setPlatformName("Android");
-        options.setAutomationName("UIautomator2");
-        options.setCapability("platformVersion","11.0");
+        options.setDeviceName("emulator-5554")
+                .setApp("D:\\brian\\Estudio\\Test Automation\\MobileAuomation\\src\\test\\resources\\Android-NativeDemoApp-0.4.0.apk")
+                .setAppPackage("com.wdiodemoapp")
+                .setAppActivity(".SplashActivity")
+                .setPlatformName("Android")
+                .setPlatformVersion("11.0")
+                .setAutomationName("UIautomator2");
+
 
         //Crear un nuevo objeto para el Driver AndroidDriver/IOSDriver
         driver = new AndroidDriver(new URL("http://127.0.0.1:4724"),options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
     }
 
+    @AfterClass
+    public void after() {
+        driver.quit(); //Finaliza el driver
+        //service.stop(); //Finaliza la conexión con Appium Server
+    }
 
+    public AndroidDriver getDriver() {
+        return driver;
+    }
 }
